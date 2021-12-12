@@ -3,6 +3,8 @@
 #define OFF HIGH
 #define ON LOW
 
+const int pinStartButton = 22; // the number of the pushbutton pin
+
 int digits[] = {13, 12, 11, 10};
 int dp = 9;
 int f = 7;
@@ -15,7 +17,10 @@ int a = 2; // 7 Segment pin multiplexed
 
 int countdown = 60;
 int count = 4;
-int dt = 500; // Stands for "delay time"
+int dt = 100; // Stands for "delay time"
+
+int lastStartButtonState = HIGH;
+int currentStartButtonState;
 
 struct struct_digits
 {
@@ -24,6 +29,10 @@ struct struct_digits
 
 void setup()
 {
+    Serial.begin(9600);
+
+    pinMode(pinStartButton, INPUT_PULLUP);
+
     pinMode(f, OUTPUT);
     pinMode(g, OUTPUT);
     pinMode(e, OUTPUT);
@@ -44,11 +53,21 @@ void setup()
 
 void loop()
 {
+    currentStartButtonState = digitalRead(pinStartButton);
+
+    if (lastStartButtonState == LOW && currentStartButtonState == HIGH)
+        script();
+
+    lastStartButtonState = currentStartButtonState;
+}
+
+void script()
+{
     // digitalWrite(A1,OFF);
     // analogWrite(A0,255);
     // These two lines allow the colon to light up
 
-    while (count > 0)
+    while (count >= 0)
     {
         digit(count);
         for (int i = 9; i >= 0; i--)
