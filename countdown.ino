@@ -16,7 +16,7 @@ int b = 3;
 int a = 2; // 7 Segment pin multiplexed
 
 int countdown = 60;
-int count = 4;
+int count;
 int dt = 100; // Stands for "delay time"
 
 int lastStartButtonState = HIGH;
@@ -66,6 +66,7 @@ void script()
     // digitalWrite(A1,OFF);
     // analogWrite(A0,255);
     // These two lines allow the colon to light up
+    count = 4;
 
     while (count >= 0)
     {
