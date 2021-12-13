@@ -3,7 +3,9 @@
 #define OFF HIGH
 #define ON LOW
 
-const int pinStartButton = 22; // the number of the pushbutton pin
+const int pinStartButton = 22;
+const int pinStopButton = 23;
+const int pinStopLED = 24;
 
 int digits[] = {13, 12, 11, 10};
 int dp = 9;
@@ -32,7 +34,7 @@ void setup()
     Serial.begin(9600);
 
     pinMode(pinStartButton, INPUT_PULLUP);
-
+    pinMode(pinStopButton, INPUT_PULLUP);
     pinMode(f, OUTPUT);
     pinMode(g, OUTPUT);
     pinMode(e, OUTPUT);
@@ -45,6 +47,8 @@ void setup()
     pinMode(A0, OUTPUT); // A0 is the 8th pin
     pinMode(A1, OUTPUT); // This is COMM
 
+    pinMode(pinStopLED, OUTPUT);
+
     for (int i = 0; i < 4; i++)
     {
         pinMode(digits[i], OUTPUT);
@@ -56,8 +60,10 @@ void loop()
     currentStartButtonState = digitalRead(pinStartButton);
 
     if (lastStartButtonState == LOW && currentStartButtonState == HIGH)
+    {
         script();
-
+        alarm();
+    }
     lastStartButtonState = currentStartButtonState;
 }
 
@@ -99,6 +105,21 @@ void digit(int digit)
         {
             digitalWrite(digits[i], OFF);
         }
+    }
+}
+
+void alarm()
+{
+    while (digitalRead(pinStopButton) == HIGH)
+    {
+        digitalWrite(pinStopLED, HIGH);
+        delay(100);
+        digitalWrite(pinStopLED, LOW);
+        delay(100);
+        digitalWrite(pinStopLED, HIGH);
+        delay(100);
+        digitalWrite(pinStopLED, LOW);
+        delay(1000);
     }
 }
 
